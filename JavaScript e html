@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentar Imagem com JavaScript (Arquivo Único)</title>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* Garante que o corpo da página ocupe 100% da área visível */
+            height: 100vh;
+            width: 100vw;
+            /* Esconde qualquer parte da imagem que tente sair da tela */
+            overflow: hidden; 
+            background-color: #f0f0f0;
+        }
+
+        #minhaImagem {
+            /* ESSENCIAL: Permite o posicionamento por 'top' e 'left' */
+            position: absolute;
+            top: 50px;   /* Posição inicial vertical */
+            left: 50px;  /* Posição inicial horizontal */
+            width: 100px; /* Tamanho da imagem (ajuste conforme necessário) */
+            height: auto; 
+            /* Para garantir que a imagem não arraste ou selecione o texto */
+            user-select: none; 
+        }
+    </style>
+</head>
+<body>
+    
+    <img id="minhaImagem" src="caminho/para/sua/imagem.png" alt="Imagem em Movimento">
+
+    <script>
+        // 1. Obtém a referência do elemento de imagem pelo seu ID
+        const imagem = document.getElementById('minhaImagem');
+
+        // 2. Variáveis de controle de posição e velocidade
+        let posX = 50;     // Posição horizontal inicial (em pixels)
+        let posY = 50;     // Posição vertical inicial (em pixels)
+        let velocidadeX = 3; // Velocidade de movimento horizontal (pixels por quadro)
+        let velocidadeY = 2; // Velocidade de movimento vertical (pixels por quadro)
+
+        // 3. Função principal que atualiza a posição e verifica as bordas
+        function animarImagem() {
+            // 3.1. Obtém as dimensões atuais da tela e da imagem
+            const larguraTela = window.innerWidth;
+            const alturaTela = window.innerHeight;
+            // Usamos offsetWidth/Height se clientWidth/Height der problemas
+            const larguraImagem = imagem.offsetWidth;
+            const alturaImagem = imagem.offsetHeight;
+
+            // 3.2. Atualiza as posições somando a velocidade atual
+            posX += velocidadeX; // Movimento horizontal
+            posY += velocidadeY; // Movimento vertical
+
+            // 3.3. Lógica para quicar na horizontal (esquerda e direita)
+            // Se a imagem atingir a borda direita OU a borda esquerda (posição 0)
+            if (posX + larguraImagem > larguraTela || posX < 0) {
+                velocidadeX = -velocidadeX; // Inverte a direção horizontal
+            }
+
+            // 3.4. Lógica para quicar na vertical (topo e base)
+            // Se a imagem atingir a borda inferior OU a borda superior (posição 0)
+            if (posY + alturaImagem > alturaTela || posY < 0) {
+                velocidadeY = -velocidadeY; // Inverte a direção vertical
+            }
+
+            // 3.5. Aplica as novas posições ao estilo da imagem
+            imagem.style.left = posX + 'px';
+            imagem.style.top = posY + 'px';
+
+            // 3.6. Chama a função novamente para o próximo quadro
+            requestAnimationFrame(animarImagem);
+        }
+
+        // 4. Inicia a animação chamando a função pela primeira vez
+        animarImagem();
+    </script>
+</body>
+</html>
