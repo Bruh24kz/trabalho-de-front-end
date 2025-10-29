@@ -1,40 +1,44 @@
-// 1. Obter a referência da imagem
+// 1. Obtém a referência do elemento de imagem pelo seu ID
 const imagem = document.getElementById('minhaImagem');
 
-// 2. Definir as variáveis de controle de posição e velocidade
-let posX = 50; // Posição inicial horizontal (left)
-let posY = 50; // Posição inicial vertical (top)
-let velocidadeX = 2; // Velocidade de movimento horizontal (pixels por atualização)
-let velocidadeY = 1.5; // Velocidade de movimento vertical (pixels por atualização)
+// 2. Variáveis de controle de posição e velocidade
+let posX = 50;     // Posição horizontal inicial (em pixels)
+let posY = 50;     // Posição vertical inicial (em pixels)
+let velocidadeX = 3; // Velocidade de movimento horizontal (pixels por quadro)
+let velocidadeY = 2; // Velocidade de movimento vertical (pixels por quadro)
 
-// 3. Função para animar a imagem
+// 3. Função principal que atualiza a posição e verifica as bordas
 function animarImagem() {
-    // 3.1. Obter as dimensões da tela e da imagem
+    // 3.1. Obtém as dimensões atuais da tela e da imagem
     const larguraTela = window.innerWidth;
     const alturaTela = window.innerHeight;
     const larguraImagem = imagem.clientWidth;
     const alturaImagem = imagem.clientHeight;
 
-    // 3.2. Atualizar as posições
-    posX += velocidadeX; // Move horizontalmente
-    posY += velocidadeY; // Move verticalmente
+    // 3.2. Atualiza as posições somando a velocidade atual
+    posX += velocidadeX; // Movimento horizontal
+    posY += velocidadeY; // Movimento vertical
 
-    // 3.3. Lógica para "quicar" a imagem nas bordas (horizontal)
+    // 3.3. Lógica para quicar na horizontal (esquerda e direita)
+    // Se a imagem atingir a borda direita OU a borda esquerda (posição 0)
     if (posX + larguraImagem > larguraTela || posX < 0) {
         velocidadeX = -velocidadeX; // Inverte a direção horizontal
     }
 
-    // 3.4. Lógica para "quicar" a imagem nas bordas (vertical)
+    // 3.4. Lógica para quicar na vertical (topo e base)
+    // Se a imagem atingir a borda inferior OU a borda superior (posição 0)
     if (posY + alturaImagem > alturaTela || posY < 0) {
         velocidadeY = -velocidadeY; // Inverte a direção vertical
     }
 
-    // 3.5. Aplicar as novas posições ao estilo da imagem
+    // 3.5. Aplica as novas posições ao estilo da imagem
     imagem.style.left = posX + 'px';
     imagem.style.top = posY + 'px';
+
+    // 3.6. Chama a função novamente antes do próximo repaint do navegador
+    // Isso é a forma mais eficiente e suave de animação em JavaScript
+    requestAnimationFrame(animarImagem);
 }
 
-// 4. Iniciar a animação
-// O setInterval chama a função 'animarImagem' a cada 30 milissegundos
-// (aproximadamente 33 quadros por segundo)
-setInterval(animarImagem, 30);
+// 4. Inicia a animação chamando a função pela primeira vez
+animarImagem();
